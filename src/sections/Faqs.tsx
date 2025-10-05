@@ -8,24 +8,24 @@ import { twMerge } from "tailwind-merge";
 
 const faqs = [
     {
-        question: "How is Layers different from other design tools?",
-        answer: "Unlike traditional design tools, Layers prioritizes speed and simplicity without sacrificing power. Our intelligent interface adapts to your workflow, reducing clicks and keeping you in your creative flow.",
+        question: "How is Versa different from other monitoring tools?",
+        answer: "Versa prioritizes simplicity, speed, and predictability. Unlike complex platforms, it lets you track performance, uptime, and SEO metrics in real-time with a credit-based system that scales with your needs.",
     },
     {
         question: "Is there a learning curve?",
-        answer: "Layers is designed to feel intuitive from day one. Most designers are productive within hours, not weeks. We also provide interactive tutorials and comprehensive documentation to help you get started.",
+        answer: "Versa is intuitive from day one. Setting up monitors, managing credits, and viewing dashboards takes minutes. Our documentation and in-app guidance help you get started quickly.",
     },
     {
-        question: "How do you handle version control?",
-        answer: "Every change in Layers is automatically saved and versioned. You can review history, restore previous versions, and create named versions for important milestones.",
+        question: "Can I monitor multiple sites?",
+        answer: "Yes! Versa supports multi-site monitoring. You can configure each site’s scan frequency, mode (standard or intensive), and view combined historical trends in the dashboard.",
     },
     {
-        question: "Can I work offline?",
-        answer: "Yes! Layers includes a robust offline mode. Changes sync automatically when you're back online, so you can keep working anywhere.",
+        question: "How do alerts work?",
+        answer: "Versa sends real-time notifications via WebSockets for downtime, load spikes, or broken links. You can also integrate alerts with Slack, email, or third-party platforms.",
     },
     {
-        question: "How does Layers handle collaboration?",
-        answer: "Layers is built for collaboration. You can invite team members to your projects, share feedback, and work together in real-time.",
+        question: "Does Versa integrate with other tools?",
+        answer: "Absolutely. Versa connects with popular platforms like Slack, Notion, GitHub, and Zapier, allowing you to automate workflows and centralize your monitoring data.",
     },
 ];
 
@@ -33,10 +33,10 @@ export default function Faqs() {
     const [selectedIndex, setSelectedIndex] = useState(0);
 
     return (
-        <section className="py-24 ">
+        <section className="py-24">
             <div className="container">
                 <div className="flex justify-center">
-                    <Tag>Faqs</Tag>
+                    <Tag>FAQs</Tag>
                 </div>
                 <h2 className="text-6xl font-medium mt-6 text-center max-w-xl mx-auto">
                     Questions? We&apos;ve got{" "}
@@ -48,7 +48,7 @@ export default function Faqs() {
                         <div
                             key={faq.question}
                             onClick={() => setSelectedIndex(faqIndex)}
-                            className="bg-neutral-900 rounded-2xl border border-white/10 p-6 "
+                            className="bg-neutral-900 rounded-2xl border border-white/10 p-6 cursor-pointer"
                         >
                             <div className="flex justify-between items-start">
                                 <h3 className="font-medium m-0">
@@ -57,7 +57,7 @@ export default function Faqs() {
                                 <Plus
                                     size={30}
                                     className={twMerge(
-                                        "feather feather-plus text-lime-400 flex-shrink-0 transition duration-300",
+                                        "text-lime-400 flex-shrink-0 transition duration-300",
                                         selectedIndex === faqIndex &&
                                             "rotate-45"
                                     )}

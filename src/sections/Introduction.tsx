@@ -10,7 +10,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
-const text = `You're racing to create exceptional work, but traditional design tools slow you down with unnecessary complexity and steep learning curves.`;
+const text = `Monitoring websites should be effortless, yet most tools are slow, complex, or costly, leaving teams in the dark about performance issues.`;
 const words = text.split(" ");
 
 export default function Introduction() {
@@ -36,15 +36,17 @@ export default function Introduction() {
     );
 
     return (
-        <section className="py-28 lg:py-40  ">
+        <section className="py-28 lg:py-40">
             <div className="container">
                 <div className="sticky top-28 md:top-32">
                     <div className="flex justify-center">
-                        <Tag>Introduction Layers</Tag>
+                        <Tag>Why Versa</Tag>
                     </div>
-                    <div className="text-4xl md:text-6xl lg:text-7xl text-center font-medium mt-10 ">
-                        <span>Your crative process deserves better.&nbsp;</span>
-                        <span className="text-white/15 ">
+                    <div className="text-4xl md:text-6xl lg:text-7xl text-center font-medium mt-10">
+                        <span>
+                            Your website monitoring deserves better.&nbsp;
+                        </span>
+                        <span className="text-white/15">
                             {words.map((word, wordIndex) => (
                                 <span
                                     key={wordIndex}
@@ -56,7 +58,7 @@ export default function Introduction() {
                             ))}
                         </span>
                         <span className="text-lime-400 block">
-                            That&apos;s why we built Layers.
+                            That&apos;s why we built Versa.
                         </span>
                     </div>
                 </div>

@@ -9,34 +9,40 @@ import IntegrationColumn from "@/components/IntegrationColumn";
 
 const integrations = [
     {
-        name: "Figma",
-        icon: figmaIcon,
-        description: "Figma is a collaborative interface design tool.",
+        name: "Slack",
+        icon: slackIcon,
+        description:
+            "Receive real-time uptime and performance alerts in your Slack channels.",
     },
     {
         name: "Notion",
         icon: notionIcon,
-        description: "Notion is an all-in-one workspace for notes and docs.",
-    },
-    {
-        name: "Slack",
-        icon: slackIcon,
-        description: "Slack is a powerful team communication platform.",
-    },
-    {
-        name: "Relume",
-        icon: relumeIcon,
-        description: "Relume is a no-code website builder and design system.",
-    },
-    {
-        name: "Framer",
-        icon: framerIcon,
-        description: "Framer is a professional website prototyping tool.",
+        description:
+            "Log monitoring results and historical metrics directly into Notion databases.",
     },
     {
         name: "GitHub",
         icon: githubIcon,
-        description: "GitHub is the leading platform for code collaboration.",
+        description:
+            "Integrate Versa with your repositories to track uptime for project pages.",
+    },
+    {
+        name: "Zapier",
+        icon: relumeIcon,
+        description:
+            "Automate workflows and connect Versa with hundreds of other apps.",
+    },
+    {
+        name: "Framer",
+        icon: framerIcon,
+        description:
+            "Visualize website snapshots and performance data in Framer prototypes.",
+    },
+    {
+        name: "Figma",
+        icon: figmaIcon,
+        description:
+            "Embed dashboards and charts directly in Figma for team reporting.",
     },
 ];
 
@@ -44,20 +50,20 @@ export type IntegrationsType = typeof integrations;
 
 export default function Integrations() {
     return (
-        <section className="py-24 overflow-hidden ">
+        <section className="py-24 overflow-hidden">
             <div className="container">
                 <div className="grid lg:grid-cols-2 items-center lg:gap-16">
                     <div>
-                        <Tag>Integration</Tag>
+                        <Tag>Integrations</Tag>
                         <h2 className="text-6xl font-medium mt-6">
-                            Plays well with{" "}
-                            <span className="text-lime-400 ">others</span>
+                            Connect effortlessly with{" "}
+                            <span className="text-lime-400">your tools</span>
                         </h2>
 
-                        <p className="text-white/50 mt-4 text-lg ">
-                            Layers seamessly connects with your favourite tools
-                            and platforms. It's easy to plug into any workflow
-                            and collaborate platforms.
+                        <p className="text-white/50 mt-4 text-lg">
+                            Versa seamlessly integrates with popular platforms
+                            so you can monitor, alert, and report across your
+                            workflow.
                         </p>
                     </div>
                     <div>

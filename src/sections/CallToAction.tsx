@@ -20,11 +20,7 @@ export default function CallToAction() {
 
     useEffect(() => {
         if (animation.current) {
-            if (slowDownAnimation) {
-                animation.current.speed = 0.5;
-            } else {
-                animation.current.speed = 1;
-            }
+            animation.current.speed = slowDownAnimation ? 0.5 : 1;
         }
     }, [slowDownAnimation]);
 
@@ -39,10 +35,16 @@ export default function CallToAction() {
                 >
                     {Array.from({ length: 10 }).map((_, index) => (
                         <div key={index} className="flex items-center gap-16">
-                            <span className="text-lime-400 text-7xl ">
+                            <span className="text-lime-400 text-7xl">
                                 &#10038;
                             </span>
-                            <span className={twMerge(slowDownAnimation && "text-lime-400")}>Try it for free</span>
+                            <span
+                                className={twMerge(
+                                    slowDownAnimation && "text-lime-400"
+                                )}
+                            >
+                                Start monitoring free (100 credits)
+                            </span>
                         </div>
                     ))}
                 </motion.div>

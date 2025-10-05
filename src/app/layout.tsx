@@ -10,8 +10,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-    title: "Modern Design Tool Landing Page",
-    description: "Created with the help of Frontend Tribe",
+    title: "Versa - Website Performance Tracker",
+    description:
+        "Versa is a scalable SaaS platform for monitoring website performance, SEO metrics, and uptime in real-time.",
 };
 
 export default function RootLayout({

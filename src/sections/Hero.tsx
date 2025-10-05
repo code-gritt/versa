@@ -9,8 +9,6 @@ import { motion, useAnimate } from "framer-motion";
 import { useEffect } from "react";
 import cursorImage from "@/assets/images/cursor-you.svg";
 
-
-
 export default function Hero() {
     const [leftDesignScope, leftDesignAnimate] = useAnimate();
     const [leftPointerScope, leftPointerAnimate] = useAnimate();
@@ -65,7 +63,7 @@ export default function Hero() {
                 cursor: `url(${cursorImage.src}), auto`,
             }}
         >
-            <div className="container relative ">
+            <div className="container relative">
                 <motion.div
                     ref={leftDesignScope}
                     initial={{ opacity: 0, y: 100, x: -100 }}
@@ -83,7 +81,7 @@ export default function Hero() {
                     initial={{ opacity: 0, y: 100, x: -200 }}
                     className="absolute top-96 left-56 hidden lg:block"
                 >
-                    <Pointer name="Andrea" />
+                    <Pointer name="Monitor" />
                 </motion.div>
 
                 <motion.div
@@ -103,21 +101,25 @@ export default function Hero() {
                     initial={{ opacity: 0, x: 275, y: 100 }}
                     className="absolute -top-4 right-80 hidden lg:block"
                 >
-                    <Pointer color="red" name="Brew" />
+                    <Pointer color="red" name="Alert" />
                 </motion.div>
 
                 <div className="flex justify-center">
                     <div className="inline-flex py-1 px-3 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full text-neutral-950 font-semibold">
-                        ✨ $7.5M eed round raised
+                        🚀 Start monitoring your first site with 100 free
+                        credits
                     </div>
                 </div>
-                <h1 className="text-6xl md:text-7xl lg:text-8xl font-medium text-center mt-6 ">
-                    Impactful design, created effortlessly
+
+                <h1 className="max-w-[900px] mx-auto text-6xl md:text-7xl lg:text-8xl font-medium text-center mt-6">
+                    Real-time website monitoring made simple
                 </h1>
+
                 <p className="text-center text-xl text-white/50 mt-8 max-w-2xl mx-auto">
-                    Design tool shouldn't slow you down. Create, prototype, and
-                    test with ease.
+                    Track load times, SEO elements, uptime, and receive live
+                    alerts—all in one scalable platform.
                 </p>
+
                 <form className="mx-auto flex border border-white/50 rounded-full p-2 mt-8 max-w-lg">
                     <input
                         type="email"
@@ -130,7 +132,7 @@ export default function Hero() {
                         type="submit"
                         variant="primary"
                     >
-                        Sign Up
+                        Get Started
                     </Button>
                 </form>
             </div>

@@ -12,13 +12,13 @@ import Key from "@/components/Key";
 import { motion } from "framer-motion";
 
 const features = [
-    "Asset Library",
-    "Code Preview",
-    "Flow Mode",
-    "Smart Sync",
-    "Auto Layout",
-    "Fast Search",
-    "Smart Guides",
+    "Standard Monitoring",
+    "Intensive SEO Crawls",
+    "Uptime Alerts",
+    "Real-Time Dashboards",
+    "Credit-Based Usage",
+    "Historical Trends",
+    "Multi-Site Support",
 ];
 
 const parentVariants = {
@@ -42,13 +42,13 @@ const cardVariants = {
 
 export default function Features() {
     return (
-        <section className="py-24 ">
+        <section className="py-24">
             <div className="container">
                 <div className="flex justify-center">
                     <Tag>Features</Tag>
                 </div>
                 <h2 className="text-6xl font-medium text-center mt-6 max-w-2xl m-auto">
-                    Where power meets{" "}
+                    Where monitoring meets{" "}
                     <span className="text-lime-400">simplicity</span>
                 </h2>
                 <motion.div
@@ -64,29 +64,29 @@ export default function Features() {
                             viewport={{ once: true, amount: 0.2 }}
                         >
                             <FeatureCard
-                                title="Real-time collaboration"
-                                description="Work together seamlessly with conflict-free team editing"
+                                title="Team Collaboration"
+                                description="Manage monitors together, share alerts, and view historical trends as a team."
                                 className="md:col-span-2 lg:col-span-1"
                             >
                                 <div className="aspect-video flex items-center justify-center">
                                     <Avatar className="z-40">
                                         <Image
                                             src={avatar1}
-                                            alt="Avatar 1"
+                                            alt="Team Member 1"
                                             className="rounded-full"
                                         />
                                     </Avatar>
                                     <Avatar className="-ml-6 border-indigo-500 z-30">
                                         <Image
                                             src={avatar2}
-                                            alt="Avatar 2"
+                                            alt="Team Member 2"
                                             className="rounded-full"
                                         />
                                     </Avatar>
                                     <Avatar className="-ml-6 border-amber-500 z-20">
                                         <Image
                                             src={avatar3}
-                                            alt="Avatar 3"
+                                            alt="Team Member 3"
                                             className="rounded-full"
                                         />
                                     </Avatar>
@@ -106,18 +106,17 @@ export default function Features() {
                             viewport={{ once: true, amount: 0.2 }}
                         >
                             <FeatureCard
-                                title="Interactive prototyping"
-                                description="Engage your clients with prototypes that react
-                                to user actions"
+                                title="Real-Time Alerts"
+                                description="Receive instant notifications for downtime, load spikes, or broken links."
                                 className="md:col-span-2 lg:col-span-1 group transition duration-500"
                             >
                                 <div className="aspect-video flex items-center justify-center">
                                     <p className="group-hover:text-white/40 transition duration-500 text-4xl font-extrabold text-white/20 text-center">
-                                        We've achived{" "}
+                                        Keep your websites{" "}
                                         <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                                            incrideible
+                                            always online
                                         </span>{" "}
-                                        growth this year
+                                        and optimized
                                     </p>
                                 </div>
                             </FeatureCard>
@@ -130,19 +129,19 @@ export default function Features() {
                             viewport={{ once: true, amount: 0.2 }}
                         >
                             <FeatureCard
-                                title="Keyboard quick actions"
-                                description="Powerfull commands to make design quickly"
+                                title="Quick Setup"
+                                description="Add new sites and configure monitoring in seconds with credit-based plans."
                                 className="group md:col-span-2 md:col-start-2 lg:col-span-1 lg:col-start-auto"
                             >
                                 <div className="aspect-video flex justify-center items-center gap-4">
                                     <Key className="w-28 outline outline-2 outline-transparent group-hover:outline-lime-400 transition-all duration-500 outline-offset-2 group-hover:translate-y-1">
-                                        shift
+                                        URL
                                     </Key>
                                     <Key className="outline outline-2 outline-transparent group-hover:outline-lime-400 transition-all duration-500 outline-offset-2 group-hover:translate-y-1 delay-150">
-                                        alt
+                                        Mode
                                     </Key>
                                     <Key className="outline outline-2 outline-transparent group-hover:outline-lime-400 transition-all duration-500 outline-offset-2 group-hover:translate-y-1 delay-300">
-                                        C
+                                        Frequency
                                     </Key>
                                 </div>
                             </FeatureCard>
