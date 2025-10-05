@@ -119,22 +119,6 @@ export default function Hero() {
                     Track load times, SEO elements, uptime, and receive live
                     alerts—all in one scalable platform.
                 </p>
-
-                <form className="mx-auto flex border border-white/50 rounded-full p-2 mt-8 max-w-lg">
-                    <input
-                        type="email"
-                        placeholder="Enter your email"
-                        className="bg-transparent px-4 flex-1 w-full"
-                    />
-                    <Button
-                        size="sm"
-                        className="whitespace-nowrap"
-                        type="submit"
-                        variant="primary"
-                    >
-                        Get Started
-                    </Button>
-                </form>
             </div>
         </section>
     );

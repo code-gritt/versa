@@ -8,13 +8,6 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 
-const navLinks = [
-    { label: "Home", href: "#" },
-    { label: "Features", href: "#features" },
-    { label: "Integrations", href: "#integrations" },
-    { label: "FAQs", href: "#faqs" },
-];
-
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
 
@@ -60,15 +53,7 @@ export default function Navbar() {
                                 </div>
                             </Link>
 
-                            <div className="hidden lg:flex justify-center items-center ">
-                                <nav className="flex gap-6 font-medium ">
-                                    {navLinks.map((each) => (
-                                        <a href={each.href} key={each.href}>
-                                            {each.label}
-                                        </a>
-                                    ))}
-                                </nav>
-                            </div>
+                            <div className="hidden lg:flex justify-center items-center "></div>
                             <div className="flex justify-end gap-4">
                                 <button
                                     type="button"
@@ -127,11 +112,6 @@ export default function Navbar() {
                                     className="overflow-hidden lg:hidden"
                                 >
                                     <div className="flex flex-col items-center gap-4 py-4">
-                                        {navLinks.map((link) => (
-                                            <a key={link.href} href={link.href}>
-                                                {link.label}
-                                            </a>
-                                        ))}
                                         <Button
                                             className="w-3/4"
                                             variant="secondary"
