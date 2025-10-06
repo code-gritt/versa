@@ -7,6 +7,7 @@ import Button from "@/components/Button";
 import { motion } from "framer-motion";
 import Tag from "@/components/Tag";
 import { register } from "@/lib/mutation";
+import Loader from "@/components/Loader";
 
 export default function Register() {
     const [email, setEmail] = useState("");
@@ -24,16 +25,18 @@ export default function Register() {
             const { user, token } = await register(email, password);
             setAuth(user, token);
             router.push("/dashboard");
-        } catch (err: any) {
-            setError(err.message || "Registration failed");
+        } catch (err: unknown) {
+            if (err instanceof Error) setError(err.message);
+            else setError("Registration failed");
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <section className="py-24 bg-neutral-950 min-h-screen">
-            <div className="container max-w-5xl">
+        <section className="py-24 bg-neutral-950 min-h-screen relative">
+            {loading && <Loader />}
+            <div className="container max-w-5xl relative z-10">
                 <motion.div
                     initial={{ opacity: 0, y: 50 }}
                     animate={{ opacity: 1, y: 0 }}

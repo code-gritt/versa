@@ -6,6 +6,7 @@ import { useAuthStore } from "@/lib/store";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Tag from "@/components/Tag";
+import Loader from "@/components/Loader";
 
 export default function Dashboard() {
     const { user, token, setAuth, clearAuth } = useAuthStore();
@@ -22,8 +23,9 @@ export default function Dashboard() {
             try {
                 const userData = await me();
                 setAuth(userData, token);
-            } catch (err: any) {
-                setError(err.message || "Failed to fetch user data");
+            } catch (err: unknown) {
+                if (err instanceof Error) setError(err.message);
+                else setError("Failed to fetch user data");
                 clearAuth();
                 router.push("/login");
             } finally {
@@ -38,8 +40,8 @@ export default function Dashboard() {
         return null;
     }
 
-    if (loading)
-        return <div className="text-white text-center py-24">Loading...</div>;
+    if (loading) return <Loader />;
+
     if (error)
         return (
             <div className="text-red-400 text-center py-24">Error: {error}</div>
