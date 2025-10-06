@@ -12,9 +12,9 @@ interface User {
 interface Post {
     id: string;
     content: string;
-    credits_used: number;
-    created_at: string;
-    updated_at: string;
+    creditsUsed: number;
+    createdAt: string;
+    updatedAt: string;
 }
 
 interface AuthResponse {
@@ -137,7 +137,7 @@ export const me = async (): Promise<User> => {
 
 export const createPost = async (
     content: string,
-    credits_used: number = 10
+    creditsUsed: number = 10
 ): Promise<PostResponse> => {
     const token = useAuthStore.getState().token;
     if (!token) {
@@ -157,9 +157,9 @@ export const createPost = async (
             post {
               id
               content
-              credits_used
-              created_at
-              updated_at
+              creditsUsed
+              createdAt
+              updatedAt
             }
             user {
               id
@@ -170,7 +170,7 @@ export const createPost = async (
           }
         }
       `,
-            variables: { content, creditsUsed: credits_used },
+            variables: { content, creditsUsed },
         }),
     });
 

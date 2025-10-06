@@ -29,7 +29,7 @@ export default function Dashboard() {
             const { post, user: updatedUser } = await createPost(content);
             setAuth(updatedUser, useAuthStore.getState().token!);
             setContent("");
-            alert(`Post created! Credits used: ${post.credits_used}`);
+            alert(`Post created! Credits used: ${post.creditsUsed}`);
         } catch (err: unknown) {
             if (err instanceof Error) setError(err.message);
             else setError("Failed to create post");
