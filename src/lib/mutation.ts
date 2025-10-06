@@ -23,7 +23,7 @@ interface AuthResponse {
 }
 
 interface PostResponse {
-    post: Post;
+    post: Post | null;
     user: User;
 }
 
@@ -180,4 +180,167 @@ export const createPost = async (
         throw new Error(result.errors[0].message);
     }
     return result.data!.createPost;
+};
+
+export const editPost = async (
+    postId: string,
+    content: string
+): Promise<PostResponse> => {
+    const token = useAuthStore.getState().token;
+    if (!token) {
+        throw new Error("No token provided");
+    }
+
+    const response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+            query: `
+        mutation EditPost($postId: ID!, $content: String!) {
+          editPost(postId: $postId, content: $content) {
+            post {
+              id
+              content
+              creditsUsed
+              createdAt
+              updatedAt
+            }
+            user {
+              id
+              email
+              credits
+              role
+            }
+          }
+        }
+      `,
+            variables: { postId, content },
+        }),
+    });
+
+    const result: GraphQLResponse<{ editPost: PostResponse }> =
+        await response.json();
+    if (result.errors) {
+        throw new Error(result.errors[0].message);
+    }
+    return result.data!.editPost;
+};
+
+export const deletePost = async (postId: string): Promise<PostResponse> => {
+    const token = useAuthStore.getState().token;
+    if (!token) {
+        throw new Error("No token provided");
+    }
+
+    const response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+            query: `
+        mutation DeletePost($postId: ID!) {
+          deletePost(postId: $postId) {
+            post {
+              id
+              content
+              creditsUsed
+              createdAt
+              updatedAt
+            }
+            user {
+              id
+              email
+              credits
+              role
+            }
+          }
+        }
+      `,
+            variables: { postId },
+        }),
+    });
+
+    const result: GraphQLResponse<{ deletePost: PostResponse }> =
+        await response.json();
+    if (result.errors) {
+        throw new Error(result.errors[0].message);
+    }
+    return result.data!.deletePost;
+};
+
+export const getPosts = async (): Promise<Post[]> => {
+    const token = useAuthStore.getState().token;
+    if (!token) {
+        throw new Error("No token provided");
+    }
+
+    const response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+            query: `
+        query Posts {
+          posts {
+            id
+            content
+            creditsUsed
+            createdAt
+            updatedAt
+          }
+        }
+      `,
+        }),
+    });
+
+    const result: GraphQLResponse<{ posts: Post[] }> = await response.json();
+    if (result.errors) {
+        throw new Error(result.errors[0].message);
+    }
+    return result.data!.posts;
+};
+
+export const getAllPosts = async (): Promise<Post[]> => {
+    const token = useAuthStore.getState().token;
+    if (!token) {
+        throw new Error("No token provided");
+    }
+
+    const response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+            query: `
+        query AllPosts {
+          allPosts {
+            id
+            content
+            creditsUsed
+            createdAt
+            updatedAt
+            user {
+              id
+              email
+            }
+          }
+        }
+      `,
+        }),
+    });
+
+    const result: GraphQLResponse<{ allPosts: Post[] }> = await response.json();
+    if (result.errors) {
+        throw new Error(result.errors[0].message);
+    }
+    return result.data!.allPosts;
 };

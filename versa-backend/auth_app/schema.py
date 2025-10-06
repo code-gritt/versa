@@ -104,11 +104,11 @@ class LoginMutation(graphene.Mutation):
 class CreatePostMutation(graphene.Mutation):
     class Arguments:
         content = graphene.String(required=True)
-        credits_used = graphene.Int(default_value=10)
+        creditsUsed = graphene.Int(default_value=10)
 
     Output = PostPayload
 
-    def mutate(self, info: GraphQLResolveInfo, content: str, credits_used: int) -> PostPayload:
+    def mutate(self, info: GraphQLResolveInfo, content: str, creditsUsed: int) -> PostPayload:
         auth_header = info.context.META.get("HTTP_AUTHORIZATION")
         if not auth_header:
             raise ValidationError("No token provided")
@@ -121,16 +121,87 @@ class CreatePostMutation(graphene.Mutation):
         except (jwt.ExpiredSignatureError, jwt.InvalidTokenError, User.DoesNotExist):
             raise ValidationError("Invalid or expired token")
 
-        if user.credits < credits_used:
+        if user.credits < creditsUsed:
             raise ValidationError("Insufficient credits")
 
-        user.credits -= credits_used
+        user.credits -= creditsUsed
         user.save()
 
         post = Post.objects.create(
-            user=user, content=content, credits_used=credits_used)
+            user=user, content=content, credits_used=creditsUsed)
 
         return PostPayload(post=post, user=user)
+
+
+class EditPostMutation(graphene.Mutation):
+    class Arguments:
+        postId = graphene.ID(required=True)
+        content = graphene.String(required=True)
+
+    Output = PostPayload
+
+    def mutate(self, info: GraphQLResolveInfo, postId: str, content: str) -> PostPayload:
+        auth_header = info.context.META.get("HTTP_AUTHORIZATION")
+        if not auth_header:
+            raise ValidationError("No token provided")
+        token = auth_header.replace("Bearer ", "")
+        try:
+            payload = jwt.decode(
+                token, "QZ9ZfprdodU2BPUNO1dbS_NgMjfTlAdGuv4ybHmrO9VeLqlMWpbUIf3Y93Qbk8dkvndHWW9oMLTBkWA3sxmCww", algorithms=["HS256"])
+            user_id = payload["userId"]
+            user = User.objects.get(id=user_id)
+        except (jwt.ExpiredSignatureError, jwt.InvalidTokenError, User.DoesNotExist):
+            raise ValidationError("Invalid or expired token")
+
+        try:
+            post = Post.objects.get(id=postId)
+        except Post.DoesNotExist:
+            raise ValidationError("Post not found")
+
+        if post.user != user and user.role != 'ADMIN':
+            raise ValidationError("You can only edit your own posts")
+
+        post.content = content
+        post.save()
+
+        return PostPayload(post=post, user=user)
+
+
+class DeletePostMutation(graphene.Mutation):
+    class Arguments:
+        postId = graphene.ID(required=True)
+
+    Output = PostPayload
+
+    def mutate(self, info: GraphQLResolveInfo, postId: str) -> PostPayload:
+        auth_header = info.context.META.get("HTTP_AUTHORIZATION")
+        if not auth_header:
+            raise ValidationError("No token provided")
+        token = auth_header.replace("Bearer ", "")
+        try:
+            payload = jwt.decode(
+                token, "QZ9ZfprdodU2BPUNO1dbS_NgMjfTlAdGuv4ybHmrO9VeLqlMWpbUIf3Y93Qbk8dkvndHWW9oMLTBkWA3sxmCww", algorithms=["HS256"])
+            user_id = payload["userId"]
+            user = User.objects.get(id=user_id)
+        except (jwt.ExpiredSignatureError, jwt.InvalidTokenError, User.DoesNotExist):
+            raise ValidationError("Invalid or expired token")
+
+        try:
+            post = Post.objects.get(id=postId)
+        except Post.DoesNotExist:
+            raise ValidationError("Post not found")
+
+        if post.user != user and user.role != 'ADMIN':
+            raise ValidationError("You can only delete your own posts")
+
+        credits_to_refund = post.credits_used
+        post_user = post.user
+        post_user.credits += credits_to_refund
+        post_user.save()
+
+        post.delete()
+
+        return PostPayload(post=None, user=post_user)
 
 # --------------------------
 # Query
@@ -139,6 +210,8 @@ class CreatePostMutation(graphene.Mutation):
 
 class MeQuery(graphene.ObjectType):
     me = graphene.Field(UserType)
+    posts = graphene.List(PostType)
+    allPosts = graphene.List(PostType)
 
     def resolve_me(self, info: GraphQLResolveInfo) -> User:
         auth_header = info.context.META.get("HTTP_AUTHORIZATION")
@@ -157,6 +230,36 @@ class MeQuery(graphene.ObjectType):
         except User.DoesNotExist:
             raise ValidationError("User not found")
 
+    def resolve_posts(self, info: GraphQLResolveInfo):
+        auth_header = info.context.META.get("HTTP_AUTHORIZATION")
+        if not auth_header:
+            raise ValidationError("No token provided")
+        token = auth_header.replace("Bearer ", "")
+        try:
+            payload = jwt.decode(
+                token, "QZ9ZfprdodU2BPUNO1dbS_NgMjfTlAdGuv4ybHmrO9VeLqlMWpbUIf3Y93Qbk8dkvndHWW9oMLTBkWA3sxmCww", algorithms=["HS256"])
+            user_id = payload["userId"]
+            user = User.objects.get(id=user_id)
+            return Post.objects.filter(user=user)
+        except (jwt.ExpiredSignatureError, jwt.InvalidTokenError, User.DoesNotExist):
+            raise ValidationError("Invalid or expired token")
+
+    def resolve_allPosts(self, info: GraphQLResolveInfo):
+        auth_header = info.context.META.get("HTTP_AUTHORIZATION")
+        if not auth_header:
+            raise ValidationError("No token provided")
+        token = auth_header.replace("Bearer ", "")
+        try:
+            payload = jwt.decode(
+                token, "QZ9ZfprdodU2BPUNO1dbS_NgMjfTlAdGuv4ybHmrO9VeLqlMWpbUIf3Y93Qbk8dkvndHWW9oMLTBkWA3sxmCww", algorithms=["HS256"])
+            user_id = payload["userId"]
+            user = User.objects.get(id=user_id)
+            if user.role != 'ADMIN':
+                raise ValidationError("Only admins can view all posts")
+            return Post.objects.all()
+        except (jwt.ExpiredSignatureError, jwt.InvalidTokenError, User.DoesNotExist):
+            raise ValidationError("Invalid or expired token")
+
 
 class Query(MeQuery, graphene.ObjectType):
     pass
@@ -166,6 +269,8 @@ class Mutation(graphene.ObjectType):
     register = RegisterMutation.Field()
     login = LoginMutation.Field()
     create_post = CreatePostMutation.Field()
+    edit_post = EditPostMutation.Field()
+    delete_post = DeletePostMutation.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
