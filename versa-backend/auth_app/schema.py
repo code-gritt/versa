@@ -55,7 +55,7 @@ class RegisterMutation(graphene.Mutation):
                 "userId": str(user.id),
                 "exp": int((datetime.utcnow() + timedelta(days=7)).timestamp()),
             },
-            os.getenv("JWT_SECRET"),
+            "QZ9ZfprdodU2BPUNO1dbS_NgMjfTlAdGuv4ybHmrO9VeLqlMWpbUIf3Y93Qbk8dkvndHWW9oMLTBkWA3sxmCww",
             algorithm="HS256",
         )
         return AuthPayload(token=token, user=user)
@@ -82,7 +82,7 @@ class LoginMutation(graphene.Mutation):
                 "userId": str(user.id),
                 "exp": int((datetime.utcnow() + timedelta(days=7)).timestamp()),
             },
-            os.getenv("JWT_SECRET"),
+            "QZ9ZfprdodU2BPUNO1dbS_NgMjfTlAdGuv4ybHmrO9VeLqlMWpbUIf3Y93Qbk8dkvndHWW9oMLTBkWA3sxmCww",
             algorithm="HS256",
         )
         return AuthPayload(token=token, user=user)
@@ -100,8 +100,8 @@ class MeQuery(graphene.ObjectType):
             raise ValidationError("No token provided")
         token = auth_header.replace("Bearer ", "")
         try:
-            payload = jwt.decode(token, os.getenv(
-                "JWT_SECRET"), algorithms=["HS256"])
+            payload = jwt.decode(
+                token, "QZ9ZfprdodU2BPUNO1dbS_NgMjfTlAdGuv4ybHmrO9VeLqlMWpbUIf3Y93Qbk8dkvndHWW9oMLTBkWA3sxmCww", algorithms=["HS256"])
             user_id = payload["userId"]
             return User.objects.get(id=user_id)
         except jwt.ExpiredSignatureError:

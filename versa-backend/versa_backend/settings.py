@@ -122,6 +122,6 @@ GRAPHENE = {
 # JWT settings
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=7),
-    'SIGNING_KEY': os.getenv('JWT_SECRET'),
+    'SIGNING_KEY': "QZ9ZfprdodU2BPUNO1dbS_NgMjfTlAdGuv4ybHmrO9VeLqlMWpbUIf3Y93Qbk8dkvndHWW9oMLTBkWA3sxmCww",
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
