@@ -87,6 +87,19 @@ export default function Login() {
                             >
                                 {loading ? "Logging in..." : "Login"}
                             </Button>
+                            // Add this button in the form, after the regular
+                            login button
+                            <Button
+                                type="button"
+                                variant="secondary"
+                                className="w-full mt-4"
+                                onClick={async () => {
+                                    // Redirect to Google OAuth URL
+                                    window.location.href = `https://versa-api-f9sl.onrender.com/auth/complete/google-oauth2/?next=/dashboard`;
+                                }}
+                            >
+                                Continue with Google
+                            </Button>
                         </form>
                         <p className="text-center text-white/50 mt-4">
                             Don’t have an account?{" "}

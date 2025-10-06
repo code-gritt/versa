@@ -121,3 +121,35 @@ export const me = async (): Promise<User> => {
     }
     return result.data!.me;
 };
+
+export const googleOAuth = async (code: string): Promise<AuthResponse> => {
+    const response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            query: `
+          mutation GoogleOAuth($code: String!) {
+            googleOAuth(code: $code) {
+              token
+              user {
+                id
+                email
+                credits
+                role
+              }
+            }
+          }
+        `,
+            variables: { code },
+        }),
+    });
+
+    const result: GraphQLResponse<{ googleOAuth: AuthResponse }> =
+        await response.json();
+    if (result.errors) {
+        throw new Error(result.errors[0].message);
+    }
+    return result.data!.googleOAuth;
+};

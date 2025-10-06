@@ -12,7 +12,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Security
 SECRET_KEY = os.getenv(
-    'SECRET_KEY', '53x(p6us883v2395pr%fp@i_f1yftel=1f%$lio(n_7n$1zo^s')
+    'SECRET_KEY', '53x(p6us883v2395pr%fp@i_f1yftel=1f%$lio(n_7n$1zo^s'
+)
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 ALLOWED_HOSTS = ['*']
 
@@ -31,6 +32,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'auth_app',
+    'social_django',  # <--- Added for social auth
 ]
 
 # Middleware
@@ -63,9 +65,11 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
-                'django.template.context_processors.request',
+                'django.template.context_processors.request',  # Required by social auth
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',  # Social auth
+                'social_django.context_processors.login_redirect',  # Social auth
             ],
         },
     },
@@ -125,3 +129,37 @@ SIMPLE_JWT = {
     'SIGNING_KEY': "QZ9ZfprdodU2BPUNO1dbS_NgMjfTlAdGuv4ybHmrO9VeLqlMWpbUIf3Y93Qbk8dkvndHWW9oMLTBkWA3sxmCww",
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
+
+# =====================
+# Social Auth Settings
+# =====================
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = "1077311579805-n1fonddbo5e2jnbhae0j6fesps5d6nv1.apps.googleusercontent.com"
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "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"
+
+SOCIAL_AUTH_PIPELINE = (
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.auth_allowed',
+    'social_core.pipeline.social_auth.social_user',
+    'social_core.pipeline.user.get_username',
+    'auth_app.pipeline.create_or_get_user',  # Custom pipeline
+    'social_core.pipeline.user.create_user',
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
+    'social_core.pipeline.user.user_details',
+)
+
+# Login redirect URLs
+LOGIN_URL = '/login'
+LOGOUT_URL = '/logout'
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/dashboard'
+SOCIAL_AUTH_LOGIN_ERROR_URL = '/login'
+
+# Google OAuth URLs
+SOCIAL_AUTH_GOOGLE_OAUTH2_AUTH_URL = 'https://accounts.google.com/o/oauth2/auth'
+SOCIAL_AUTH_GOOGLE_OAUTH2_ACCESS_TOKEN_URL = 'https://oauth2.googleapis.com/token'

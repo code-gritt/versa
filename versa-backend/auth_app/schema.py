@@ -116,9 +116,50 @@ class Query(MeQuery, graphene.ObjectType):
     pass
 
 
+class GoogleOAuthMutation(graphene.Mutation):
+    class Arguments:
+        code = graphene.String(required=True)  # Google auth code
+
+    Output = AuthPayload
+
+    def mutate(self, info: GraphQLResolveInfo, code: str) -> AuthPayload:
+        # Use Django's social auth to complete OAuth flow
+        from social_core.backends.google.GoogleOAuth2 import GoogleOAuth2
+        from django.http import HttpRequest
+
+        # Create a mock request for social auth
+        request = HttpRequest()
+        request.session = {}
+
+        # Complete OAuth flow
+        backend = GoogleOAuth2()
+        user = backend.do_auth(request, code=code)
+
+        if not user:
+            raise ValidationError("Google authentication failed")
+
+        # Generate JWT token (same format as existing)
+        token = jwt.encode(
+            {
+                "userId": str(user.id),
+                "exp": int((datetime.utcnow() + timedelta(days=7)).timestamp()),
+            },
+            "QZ9ZfprdodU2BPUNO1dbS_NgMjfTlAdGuv4ybHmrO9VeLqlMWpbUIf3Y93Qbk8dkvndHWW9oMLTBkWA3sxmCww",
+            algorithm="HS256",
+        )
+
+        # Ensure user has credits (for new users)
+        if not hasattr(user, 'credits') or user.credits == 0:
+            user.credits = 100
+            user.save()
+
+        return AuthPayload(token=token, user=user)
+
+
 class Mutation(graphene.ObjectType):
     register = RegisterMutation.Field()
     login = LoginMutation.Field()
+    googleOAuth = GoogleOAuthMutation.Field()
 
 
 # --------------------------
