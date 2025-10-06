@@ -1,37 +1,42 @@
 "use client";
 
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { googleOAuth } from "@/lib/mutation";
 import { useAuthStore } from "@/lib/store";
 import Loader from "@/components/Loader";
 
-export default function Callback() {
+export default function CallbackPageWrapper() {
+    return (
+        <Suspense fallback={<Loader />}>
+            <CallbackPage />
+        </Suspense>
+    );
+}
+
+function CallbackPage() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const { setAuth } = useAuthStore();
 
     useEffect(() => {
-        const handleCallback = async () => {
-            const code = searchParams.get("code");
-            if (!code) {
-                router.push("/login?error=No+code+provided");
-                return;
-            }
+        const code = searchParams.get("code");
+        if (!code) {
+            router.replace("/login?error=No+code+provided");
+            return;
+        }
 
-            try {
-                const { user, token } = await googleOAuth(code);
+        googleOAuth(code)
+            .then(({ user, token }) => {
                 setAuth(user, token);
-                router.push("/dashboard");
-            } catch (err: unknown) {
-                const errorMessage =
-                    err instanceof Error ? err.message : "Google OAuth failed";
-                router.push(`/login?error=${encodeURIComponent(errorMessage)}`);
-            }
-        };
-
-        handleCallback();
-    }, [searchParams, setAuth, router]);
+                router.replace("/dashboard");
+            })
+            .catch((err) => {
+                const errorMsg =
+                    err instanceof Error ? err.message : "OAuth failed";
+                router.replace(`/login?error=${encodeURIComponent(errorMsg)}`);
+            });
+    }, [searchParams, router, setAuth]);
 
     return (
         <section className="py-24 bg-neutral-950 min-h-screen relative">
