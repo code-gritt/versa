@@ -1,9 +1,9 @@
-from urllib.parse import urlparse, parse_qsl
-from dotenv import load_dotenv
-import os
-from pathlib import Path
-from datetime import timedelta
 
+from datetime import timedelta
+from pathlib import Path
+import os
+from dotenv import load_dotenv
+from urllib.parse import urlparse, parse_qsl
 
 # Load environment variables
 load_dotenv()
@@ -38,7 +38,7 @@ INSTALLED_APPS = [
 
 # Middleware
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',  # Must be first
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -96,6 +96,9 @@ DATABASES = {
         'OPTIONS': dict(parse_qsl(parsed_url.query)),
     }
 }
+
+# Custom User Model
+AUTH_USER_MODEL = 'auth_app.User'
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -157,8 +160,4 @@ LOGIN_URL = '/login'
 LOGOUT_URL = '/logout'
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = 'https://versa-pink.vercel.app/callback'
 SOCIAL_AUTH_LOGIN_ERROR_URL = 'https://versa-pink.vercel.app/login'
-
-# Google OAuth URLs
-SOCIAL_AUTH_GOOGLE_OAUTH2_AUTH_URL = 'https://accounts.google.com/o/oauth2/auth'
-SOCIAL_AUTH_GOOGLE_OAUTH2_ACCESS_TOKEN_URL = 'https://oauth2.googleapis.com/token'
 SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = 'https://versa-api-f9sl.onrender.com/auth/complete/google-oauth2/'

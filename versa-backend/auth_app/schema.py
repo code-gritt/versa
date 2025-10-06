@@ -120,31 +120,27 @@ class Query(MeQuery, graphene.ObjectType):
 
 class GoogleOAuthMutation(graphene.Mutation):
     class Arguments:
-        code = graphene.String(required=True)  # Google auth code
+        code = graphene.String(required=True)
 
     Output = AuthPayload
 
     def mutate(self, info: GraphQLResolveInfo, code: str) -> AuthPayload:
         try:
-            # Get strategy and backend
             strategy = load_strategy(request=info.context)
             backend = load_backend(
-                strategy, 'google-oauth2', redirect_uri=None)
-
-            # Complete OAuth flow
+                strategy, 'google-oauth2', redirect_uri='https://versa-api-f9sl.onrender.com/auth/complete/google-oauth2/')
             user = do_complete(
                 backend,
                 code=code,
                 user=None,
                 strategy=strategy,
                 redirect_name='next',
-                redirect_uri='https://versa-pink.vercel.app/callback'  # Frontend callback
+                redirect_uri='https://versa-pink.vercel.app/callback'
             )
 
             if not user or not user.is_active:
                 raise ValidationError("Google authentication failed")
 
-            # Generate JWT token
             token = jwt.encode(
                 {
                     "userId": str(user.id),

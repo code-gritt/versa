@@ -1,4 +1,3 @@
-
 from auth_app.models import User
 
 
@@ -20,14 +19,8 @@ def create_or_get_user(backend, details, response, user=None, *args, **kwargs):
         defaults={
             'credits': 100,
             'role': 'USER',
-            # Required for AbstractUser compatibility
-            'username': email.split('@')[0],
+            'username': email.split('@')[0],  # Required for AbstractUser
         }
     )
-
-    # Ensure credits are set for existing users without credits
-    if not created and user.credits == 0:
-        user.credits = 100
-        user.save()
 
     return {'is_new': created, 'user': user}
