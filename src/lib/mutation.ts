@@ -9,8 +9,21 @@ interface User {
     role: string;
 }
 
+interface Post {
+    id: string;
+    content: string;
+    credits_used: number;
+    created_at: string;
+    updated_at: string;
+}
+
 interface AuthResponse {
     token: string;
+    user: User;
+}
+
+interface PostResponse {
+    post: Post;
     user: User;
 }
 
@@ -122,34 +135,49 @@ export const me = async (): Promise<User> => {
     return result.data!.me;
 };
 
-export const googleOAuth = async (code: string): Promise<AuthResponse> => {
+export const createPost = async (
+    content: string,
+    credits_used: number = 10
+): Promise<PostResponse> => {
+    const token = useAuthStore.getState().token;
+    if (!token) {
+        throw new Error("No token provided");
+    }
+
     const response = await fetch(API_URL, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
             query: `
-          mutation GoogleOAuth($code: String!) {
-            googleOAuth(code: $code) {
-              token
-              user {
-                id
-                email
-                credits
-                role
-              }
+        mutation CreatePost($content: String!, $creditsUsed: Int!) {
+          createPost(content: $content, creditsUsed: $creditsUsed) {
+            post {
+              id
+              content
+              credits_used
+              created_at
+              updated_at
+            }
+            user {
+              id
+              email
+              credits
+              role
             }
           }
-        `,
-            variables: { code },
+        }
+      `,
+            variables: { content, creditsUsed: credits_used },
         }),
     });
 
-    const result: GraphQLResponse<{ googleOAuth: AuthResponse }> =
+    const result: GraphQLResponse<{ createPost: PostResponse }> =
         await response.json();
     if (result.errors) {
         throw new Error(result.errors[0].message);
     }
-    return result.data!.googleOAuth;
+    return result.data!.createPost;
 };
