@@ -1,17 +1,28 @@
-from auth_app.models import User
-from datetime import datetime, timedelta
-import jwt
-from social_core.actions import do_complete
-from social_django.utils import load_strategy, load_backend
-from django.http import HttpResponse
 from django.shortcuts import redirect
+from django.http import HttpResponse
+from social_django.utils import load_strategy, load_backend
+from social_core.actions import do_complete
+import jwt
+from datetime import datetime, timedelta
+from auth_app.models import User
+import urllib.parse
 
 
 def google_oauth_callback(request):
     try:
+        state = request.GET.get('state')
+        if not state:
+            return redirect('https://versa-pink.vercel.app/login?error=Missing+state+parameter')
+
         strategy = load_strategy(request)
         backend = load_backend(
             strategy, 'google-oauth2', redirect_uri='https://versa-api-f9sl.onrender.com/auth/complete/google-oauth2/')
+
+        # Validate state
+        stored_state = strategy.session_get('google-oauth2_state')
+        if state != stored_state:
+            return redirect('https://versa-pink.vercel.app/login?error=Invalid+state+parameter')
+
         user = do_complete(
             backend,
             code=request.GET.get('code'),
@@ -33,7 +44,8 @@ def google_oauth_callback(request):
             algorithm="HS256",
         )
 
-        redirect_url = f'https://versa-pink.vercel.app/callback?token={token}'
+        redirect_url = f'https://versa-pink.vercel.app/callback?token={urllib.parse.quote(token)}'
         return redirect(redirect_url)
     except Exception as e:
-        return redirect(f'https://versa-pink.vercel.app/login?error={str(e)}')
+        error_message = urllib.parse.quote(str(e))
+        return redirect(f'https://versa-pink.vercel.app/login?error={error_message}')

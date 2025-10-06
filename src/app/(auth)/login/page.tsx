@@ -34,18 +34,9 @@ export default function Login() {
     };
 
     const handleGoogleLogin = () => {
-        const redirectUri = encodeURIComponent(
-            "https://versa-api-f9sl.onrender.com/auth/complete/google-oauth2/"
-        );
-        const clientId = encodeURIComponent(
-            "1077311579805-n1fonddbo5e2jnbhae0j6fesps5d6nv1.apps.googleusercontent.com"
-        );
-        const scope = encodeURIComponent("email profile openid");
-        const state = encodeURIComponent("random_state_string"); // Add for security
-        const googleAuthUrl = `https://accounts.google.com/o/oauth2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&state=${state}`;
-        window.location.href = googleAuthUrl;
+        window.location.href =
+            "https://versa-api-f9sl.onrender.com/auth/login/google-oauth2/?next=/dashboard";
     };
-
     return (
         <section className="py-24 bg-neutral-950 min-h-screen relative">
             {loading && <Loader />}
