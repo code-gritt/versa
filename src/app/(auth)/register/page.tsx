@@ -93,7 +93,9 @@ export default function Register() {
                                 variant="secondary"
                                 className="w-full mt-4"
                                 onClick={() => {
-                                    window.location.href = `https://versa-api-f9sl.onrender.com/auth/complete/google-oauth2/?next=/dashboard`;
+                                    // Redirect to the start of the OAuth2 flow
+                                    window.location.href =
+                                        "https://versa-api-f9sl.onrender.com/auth/login/google-oauth2/?next=/dashboard";
                                 }}
                             >
                                 Continue with Google
