@@ -5,7 +5,7 @@ import graphene
 from graphene_django.types import DjangoObjectType
 from graphql import GraphQLResolveInfo
 from django.core.exceptions import ValidationError
-from auth_app.models import User, Role
+from auth_app.models import User
 
 
 # --------------------------
@@ -16,8 +16,14 @@ class UserType(DjangoObjectType):
         model = User
         fields = ("id", "email", "credits", "role")
 
+    # Ensure the role is returned as a string for GraphQL enum
+    role = graphene.Field(lambda: RoleEnum)
 
-# Map Django Role enum to Graphene enum using string values
+    def resolve_role(self, info):
+        return str(self.role)
+
+
+# Graphene enum matching the string values in the model
 class RoleEnum(graphene.Enum):
     USER = "USER"
     ADMIN = "ADMIN"
@@ -42,7 +48,6 @@ class RegisterMutation(graphene.Mutation):
         if User.objects.filter(email=email).exists():
             raise ValidationError("Email already in use")
 
-        # Create user using Django-compatible method
         user = User.objects.create_user(email=email, password=password)
 
         token = jwt.encode(
