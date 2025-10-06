@@ -9,8 +9,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # CSRF exempt for GraphQL endpoint
     path('graphql/', csrf_exempt(GraphQLView.as_view(graphiql=True, schema=schema))),
-    # Social Auth URLs
-    path('auth/', include('social_django.urls', namespace='social')),
-    path('auth/complete/google-oauth2/',
-         google_oauth_callback, name='google_oauth_callback'),
+
 ]
