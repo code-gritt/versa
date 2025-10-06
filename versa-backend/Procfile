@@ -1,0 +1,1 @@
+web: gunicorn versa_backend.wsgi --log-file -
