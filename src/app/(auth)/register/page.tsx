@@ -34,9 +34,15 @@ export default function Register() {
     };
 
     const handleGoogleRegister = () => {
-        // Redirect to Django social auth Google login endpoint
-        window.location.href =
-            "https://versa-api-f9sl.onrender.com/auth/login/google-oauth2/?next=/dashboard";
+        const redirectUri = encodeURIComponent(
+            "https://versa-api-f9sl.onrender.com/auth/complete/google-oauth2/"
+        );
+        const clientId = encodeURIComponent(
+            "1077311579805-n1fonddbo5e2jnbhae0j6fesps5d6nv1.apps.googleusercontent.com"
+        );
+        const scope = encodeURIComponent("email profile openid");
+        const googleAuthUrl = `https://accounts.google.com/o/oauth2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}`;
+        window.location.href = googleAuthUrl;
     };
 
     return (
@@ -96,9 +102,15 @@ export default function Register() {
                             <Button
                                 type="button"
                                 variant="secondary"
-                                className="w-full mt-4"
+                                className="w-full mt-4 flex items-center justify-center gap-2"
                                 onClick={handleGoogleRegister}
                             >
+                                <svg className="w-5 h-5" viewBox="0 0 24 24">
+                                    <path
+                                        fill="currentColor"
+                                        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                                    />
+                                </svg>
                                 Continue with Google
                             </Button>
                         </form>

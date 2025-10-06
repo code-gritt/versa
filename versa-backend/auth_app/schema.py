@@ -6,6 +6,8 @@ from graphene_django.types import DjangoObjectType
 from graphql import GraphQLResolveInfo
 from django.core.exceptions import ValidationError
 from auth_app.models import User
+from social_django.utils import load_strategy, load_backend
+from social_core.actions import do_complete
 
 
 # --------------------------
@@ -123,37 +125,38 @@ class GoogleOAuthMutation(graphene.Mutation):
     Output = AuthPayload
 
     def mutate(self, info: GraphQLResolveInfo, code: str) -> AuthPayload:
-        # Use Django's social auth to complete OAuth flow
-        from social_core.backends.google.GoogleOAuth2 import GoogleOAuth2
-        from django.http import HttpRequest
+        try:
+            # Get strategy and backend
+            strategy = load_strategy(request=info.context)
+            backend = load_backend(
+                strategy, 'google-oauth2', redirect_uri=None)
 
-        # Create a mock request for social auth
-        request = HttpRequest()
-        request.session = {}
+            # Complete OAuth flow
+            user = do_complete(
+                backend,
+                code=code,
+                user=None,
+                strategy=strategy,
+                redirect_name='next',
+                redirect_uri='https://versa-pink.vercel.app/callback'  # Frontend callback
+            )
 
-        # Complete OAuth flow
-        backend = GoogleOAuth2()
-        user = backend.do_auth(request, code=code)
+            if not user or not user.is_active:
+                raise ValidationError("Google authentication failed")
 
-        if not user:
-            raise ValidationError("Google authentication failed")
+            # Generate JWT token
+            token = jwt.encode(
+                {
+                    "userId": str(user.id),
+                    "exp": int((datetime.utcnow() + timedelta(days=7)).timestamp()),
+                },
+                "QZ9ZfprdodU2BPUNO1dbS_NgMjfTlAdGuv4ybHmrO9VeLqlMWpbUIf3Y93Qbk8dkvndHWW9oMLTBkWA3sxmCww",
+                algorithm="HS256",
+            )
 
-        # Generate JWT token (same format as existing)
-        token = jwt.encode(
-            {
-                "userId": str(user.id),
-                "exp": int((datetime.utcnow() + timedelta(days=7)).timestamp()),
-            },
-            "QZ9ZfprdodU2BPUNO1dbS_NgMjfTlAdGuv4ybHmrO9VeLqlMWpbUIf3Y93Qbk8dkvndHWW9oMLTBkWA3sxmCww",
-            algorithm="HS256",
-        )
-
-        # Ensure user has credits (for new users)
-        if not hasattr(user, 'credits') or user.credits == 0:
-            user.credits = 100
-            user.save()
-
-        return AuthPayload(token=token, user=user)
+            return AuthPayload(token=token, user=user)
+        except Exception as e:
+            raise ValidationError(f"Google OAuth failed: {str(e)}")
 
 
 class Mutation(graphene.ObjectType):

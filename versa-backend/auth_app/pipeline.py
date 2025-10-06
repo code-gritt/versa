@@ -1,27 +1,33 @@
+
 from auth_app.models import User
 
 
-def create_or_get_user(backend, details, user=None, *args, **kwargs):
+def create_or_get_user(backend, details, response, user=None, *args, **kwargs):
     """
     Custom pipeline to create or get a user with default credits for OAuth logins.
-    Ensures the returned 'user' is a Django User instance.
+    Ensures the returned 'user' is a Django User instance compatible with social-auth.
     """
-    if user:
-        return {'is_new': False, 'user': user}  # Always return 'user'
+    if user and user.is_active:
+        return {'is_new': False, 'user': user}
 
     email = details.get('email')
     if not email:
-        return None  # Cannot create user without email
+        raise ValueError("Email is required for Google OAuth")
 
-    # Try to get existing user
+    # Get or create user with defaults
     user, created = User.objects.get_or_create(
         email=email,
         defaults={
             'credits': 100,
             'role': 'USER',
-            'username': email.split('@')[0],  # Required if using AbstractUser
-            'password': None  # OAuth users won't have a password
+            # Required for AbstractUser compatibility
+            'username': email.split('@')[0],
         }
     )
+
+    # Ensure credits are set for existing users without credits
+    if not created and user.credits == 0:
+        user.credits = 100
+        user.save()
 
     return {'is_new': created, 'user': user}

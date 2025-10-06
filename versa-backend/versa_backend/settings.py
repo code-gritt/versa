@@ -1,8 +1,9 @@
-from datetime import timedelta
-from pathlib import Path
-import os
-from dotenv import load_dotenv
 from urllib.parse import urlparse, parse_qsl
+from dotenv import load_dotenv
+import os
+from pathlib import Path
+from datetime import timedelta
+
 
 # Load environment variables
 load_dotenv()
@@ -32,7 +33,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'auth_app',
-    'social_django',  # <--- Added for social auth
+    'social_django',
 ]
 
 # Middleware
@@ -65,11 +66,11 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
-                'django.template.context_processors.request',  # Required by social auth
+                'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'social_django.context_processors.backends',  # Social auth
-                'social_django.context_processors.login_redirect',  # Social auth
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -87,7 +88,7 @@ parsed_url = urlparse(DATABASE_URL)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': parsed_url.path[1:],  # remove leading '/'
+        'NAME': parsed_url.path[1:],
         'USER': parsed_url.username,
         'PASSWORD': parsed_url.password,
         'HOST': parsed_url.hostname,
@@ -130,9 +131,7 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
-# =====================
 # Social Auth Settings
-# =====================
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.google.GoogleOAuth2',
     'django.contrib.auth.backends.ModelBackend',
@@ -147,8 +146,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.auth_allowed',
     'social_core.pipeline.social_auth.social_user',
     'social_core.pipeline.user.get_username',
-    'auth_app.pipeline.create_or_get_user',  # Custom pipeline
-    'social_core.pipeline.user.create_user',
+    'auth_app.pipeline.create_or_get_user',
     'social_core.pipeline.social_auth.associate_user',
     'social_core.pipeline.social_auth.load_extra_data',
     'social_core.pipeline.user.user_details',
@@ -157,9 +155,10 @@ SOCIAL_AUTH_PIPELINE = (
 # Login redirect URLs
 LOGIN_URL = '/login'
 LOGOUT_URL = '/logout'
-SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/dashboard'
-SOCIAL_AUTH_LOGIN_ERROR_URL = '/login'
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = 'https://versa-pink.vercel.app/callback'
+SOCIAL_AUTH_LOGIN_ERROR_URL = 'https://versa-pink.vercel.app/login'
 
 # Google OAuth URLs
 SOCIAL_AUTH_GOOGLE_OAUTH2_AUTH_URL = 'https://accounts.google.com/o/oauth2/auth'
 SOCIAL_AUTH_GOOGLE_OAUTH2_ACCESS_TOKEN_URL = 'https://oauth2.googleapis.com/token'
+SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = 'https://versa-api-f9sl.onrender.com/auth/complete/google-oauth2/'
