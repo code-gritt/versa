@@ -33,6 +33,12 @@ export default function Register() {
         }
     };
 
+    const handleGoogleRegister = () => {
+        // Redirect to Django social auth Google login endpoint
+        window.location.href =
+            "https://versa-api-f9sl.onrender.com/auth/login/google-oauth2/?next=/dashboard";
+    };
+
     return (
         <section className="py-24 bg-neutral-950 min-h-screen relative">
             {loading && <Loader />}
@@ -87,16 +93,11 @@ export default function Register() {
                             >
                                 {loading ? "Registering..." : "Sign Up"}
                             </Button>
-                            {/* Google login button */}
                             <Button
                                 type="button"
                                 variant="secondary"
                                 className="w-full mt-4"
-                                onClick={() => {
-                                    // Redirect to the start of the OAuth2 flow
-                                    window.location.href =
-                                        "https://versa-api-f9sl.onrender.com/auth/login/google-oauth2/?next=/dashboard";
-                                }}
+                                onClick={handleGoogleRegister}
                             >
                                 Continue with Google
                             </Button>

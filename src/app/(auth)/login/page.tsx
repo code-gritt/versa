@@ -33,6 +33,13 @@ export default function Login() {
         }
     };
 
+    const handleGoogleLogin = () => {
+        // Redirect to Django social auth Google login endpoint
+        // Use the `/auth/login/google-oauth2/` endpoint on your backend
+        window.location.href =
+            "https://versa-api-f9sl.onrender.com/auth/login/google-oauth2/?next=/dashboard";
+    };
+
     return (
         <section className="py-24 bg-neutral-950 min-h-screen relative">
             {loading && <Loader />}
@@ -87,16 +94,11 @@ export default function Login() {
                             >
                                 {loading ? "Logging in..." : "Login"}
                             </Button>
-                            {/* Google login button */}
                             <Button
                                 type="button"
                                 variant="secondary"
                                 className="w-full mt-4"
-                                onClick={() => {
-                                    // Redirect to the start of the OAuth2 flow
-                                    window.location.href =
-                                        "https://versa-api-f9sl.onrender.com/auth/login/google-oauth2/?next=/dashboard";
-                                }}
+                                onClick={handleGoogleLogin}
                             >
                                 Continue with Google
                             </Button>

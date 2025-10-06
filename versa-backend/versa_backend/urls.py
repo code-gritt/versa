@@ -6,9 +6,8 @@ from auth_app.schema import schema
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # CSRF exempt for GraphQL endpoint to avoid POST 403 errors
+    # CSRF exempt for GraphQL endpoint
     path('graphql/', csrf_exempt(GraphQLView.as_view(graphiql=True, schema=schema))),
-    path('auth/', include('social_django.urls', namespace='social')),  # OAuth URLs
-    path('oauth/', include('social_django.urls',
-         namespace='social')),  # Alternative path
+    # Social Auth URLs
+    path('auth/', include('social_django.urls', namespace='social')),
 ]
